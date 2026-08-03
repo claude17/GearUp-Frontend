@@ -1,7 +1,7 @@
 import Link from "next/link";
-import LoginForm from "../_components/LoginForm";
+import RegisterForm from "../_components/RegisterForm";
 
-export default function LoginPage() {
+export default function RegisterPage() {
     return (
         <div className="flex min-h-screen items-center justify-center bg-background px-4">
             <div className="w-full max-w-md space-y-6 rounded-xl border bg-card p-8 shadow-lg">
@@ -9,25 +9,24 @@ export default function LoginPage() {
                 {/* Header */}
                 <div className="space-y-2 text-center">
                     <h1 className="text-3xl font-bold">
-                        Welcome Back!
+                        Create Account
                     </h1>
 
                     <p className="text-muted-foreground">
-                        Sign in to continue to <span className="font-semibold">GearUp</span>.
+                        Create your <span className="font-semibold">GearUp</span> account to start renting gear.
                     </p>
                 </div>
 
-                {/* Login Form */}
-                <LoginForm />
+                <RegisterForm />
 
                 {/* Footer */}
                 <div className="text-center text-sm text-muted-foreground">
-                    Don't have an account?{" "}
+                    Already have an account?{" "}
                     <Link
-                        href="/register"
+                        href="/login"
                         className="font-medium text-primary hover:underline"
                     >
-                        Register
+                        Login
                     </Link>
                 </div>
 

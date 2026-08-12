@@ -76,10 +76,10 @@ export const loginAction = async (
             redirect("/dashboard");
 
         case "PROVIDER":
-            redirect("/dashboard/provider-dashboard");
+            redirect("/provider-dashboard");
 
         case "ADMIN":
-            redirect("/dashboard/admin-dashboard");
+            redirect("/admin-dashboard");
 
         default:
             redirect("/");

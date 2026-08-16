@@ -149,6 +149,13 @@ export type CustomerRental = {
         provider: string;
         paidAt: string | null;
     } | null;
+
+    review: {
+        id: string;
+        rating: number;
+        comment: string;
+        createdAt: string;
+    } | null;
 };
 
 export type ISidebarItem = {

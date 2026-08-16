@@ -34,5 +34,6 @@ export default async function RootLayout({
         {/* {Footer} */}
       </body>
     </html>
+    
   );
 }

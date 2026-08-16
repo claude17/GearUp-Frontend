@@ -1,8 +1,11 @@
+"use client"
 import Image from "next/image";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { CustomerRental } from "@/lib/types";
 import { PayNowButton } from "./PayNowButton";
+import { ReviewDialog } from "../review/ReviewDialog";
+import { useState } from "react";
 
 
 
@@ -11,6 +14,11 @@ type RentalCardProps = {
 };
 
 export function RentalCard({ rental }: RentalCardProps) {
+
+    const [reviewSubmitted, setReviewSubmitted] = useState(
+        !!rental.review
+    );
+
     const startDate = new Date(rental.startDate).toLocaleDateString();
     const endDate = new Date(rental.endDate).toLocaleDateString();
 
@@ -100,6 +108,20 @@ export function RentalCard({ rental }: RentalCardProps) {
                 {rental.status === "PAID" && (
                     <p className="text-sm font-medium text-green-600">
                         Payment completed. Waiting for pickup.
+                    </p>
+                )}
+
+                {rental.status === "RETURNED" && !reviewSubmitted && (
+                    <ReviewDialog
+                        rentalId={rental.id}
+                        gearName={rental.gearItem.name}
+                        onReviewSubmitted={() => setReviewSubmitted(true)}
+                    />
+                )}
+
+                {rental.status === "RETURNED" && reviewSubmitted && (
+                    <p className="text-sm text-muted-foreground">
+                        You already reviewed this gear.
                     </p>
                 )}
             </CardContent>

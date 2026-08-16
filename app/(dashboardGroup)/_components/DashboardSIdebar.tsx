@@ -11,7 +11,7 @@ import {
   SidebarMenuItem
 } from "@/components/ui/sidebar";
 import { ISidebarItem, NavbarProps } from "@/lib/types";
-import { Newspaper,Podcast } from "lucide-react";
+// import { Newspaper,Podcast } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { sidebarMenuItems } from "../_config/sidebarMenuItems";

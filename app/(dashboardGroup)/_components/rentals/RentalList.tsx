@@ -1,6 +1,8 @@
 import { CustomerRental } from "@/lib/types";
 import { getMyRentals } from "../../_actions/rentalActions";
 import { RentalCard } from "./RentalCard";
+// import { RentalOrderCard } from "./RentalOrderCard";
+
 
 export async function RentalList() {
     const result = await getMyRentals();

@@ -2,6 +2,7 @@ import { getAllGears, getCategories } from "../_actions/gearActions";
 
 import GearFilter from "../_components/GearFilter";
 import GearGrid from "../_components/GearGrid";
+import GearSearch from "../_components/GearSearch";
 
 
 type SearchParams = Promise<{
@@ -33,6 +34,9 @@ export default async function GearPage({
     if (params.maxPrice)
         query.set("maxPrice", params.maxPrice);
 
+    if (params.search)
+    query.set("search", params.search);
+
     const [gearResult, categoryResult] = await Promise.all([
         getAllGears(
             query.toString() ? `?${query.toString()}` : ""
@@ -60,6 +64,8 @@ export default async function GearPage({
 
 
             </div>
+
+            <GearSearch/>
 
             {/* Content */}
             <div className="grid gap-8 lg:grid-cols-4">

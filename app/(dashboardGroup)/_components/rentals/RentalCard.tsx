@@ -1,11 +1,14 @@
-"use client"
+"use client";
 import Image from "next/image";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { CustomerRental } from "@/lib/types";
 import { PayNowButton } from "./PayNowButton";
 import { ReviewDialog } from "../review/ReviewDialog";
-import { useState } from "react";
+import { useState, useTransition } from "react";
+import { toast } from "sonner";
+import { updateOrderStatus } from "../../_actions/providerGearActions";
+import { Button } from "@/components/ui/button";
 
 
 
@@ -19,8 +22,27 @@ export function RentalCard({ rental }: RentalCardProps) {
         !!rental.review
     );
 
+    const [pending, startTransition] = useTransition();
+
     const startDate = new Date(rental.startDate).toLocaleDateString();
     const endDate = new Date(rental.endDate).toLocaleDateString();
+
+    const handleCancel = () => {
+        startTransition(async () => {
+            const result = await updateOrderStatus(
+                rental.id,
+                "CANCELLED"
+            );
+
+            if (result.success) {
+                toast.success("Rental cancelled successfully.");
+            } else {
+                toast.error(
+                    result.message || "Failed to cancel rental."
+                );
+            }
+        });
+    };
 
     return (
         <Card className="overflow-hidden">
@@ -94,9 +116,21 @@ export function RentalCard({ rental }: RentalCardProps) {
                 </div>
 
                 {rental.status === "PLACED" && (
-                    <p className="text-sm text-muted-foreground">
-                        Waiting for the provider to confirm your rental.
-                    </p>
+                    <div className="flex items-center justify-between gap-3">
+                        <p className="text-sm text-muted-foreground">
+                            Waiting for the provider to confirm your rental.
+                        </p>
+
+                        <Button
+                            variant="destructive"
+                            size="sm"
+                            disabled={pending}
+                            onClick={handleCancel}
+                            className="cursor-pointer"
+                        >
+                            {pending ? "Cancelling..." : "Cancel Rental"}
+                        </Button>
+                    </div>
                 )}
 
                 {rental.status === "CONFIRMED" && (
@@ -144,7 +178,21 @@ function RentalStatusBadge({
     };
 
     return (
-        <Badge variant="outline">
+        <Badge
+    className={
+        status === "PLACED"
+            ? "bg-yellow-100 text-yellow-800 border-yellow-300"
+            : status === "CONFIRMED"
+            ? "bg-blue-100 text-blue-800 border-blue-300"
+            : status === "PAID"
+            ? "bg-purple-100 text-purple-800 border-purple-300"
+            : status === "PICKED_UP"
+            ? "bg-green-100 text-green-800 border-green-300"
+            : status === "RETURNED"
+            ? "bg-gray-100 text-gray-800 border-gray-300"
+            : "bg-red-100 text-red-800 border-red-300"
+            }
+        >
             {labels[status]}
         </Badge>
     );

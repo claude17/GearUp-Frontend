@@ -36,7 +36,7 @@ export const getProviderOrders = async () => {
     return result;
 };
 
-export const updateProviderOrderStatus = async (
+export const updateOrderStatus = async (
     rentalId: string,
     status: string
 ) => {

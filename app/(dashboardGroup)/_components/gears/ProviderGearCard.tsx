@@ -26,6 +26,7 @@ import {
 } from "@/components/ui/alert-dialog";
 
 import { EditGearDialog } from "./EditGearDialog";
+import { toast } from "sonner";
 
 type Gear = {
     id: string;
@@ -217,7 +218,7 @@ export function ProviderGearCard({
                                         setDeleting(false);
 
                                         // We'll improve this with a toast later
-                                        console.error(
+                                        toast.error(
                                             result.message ||
                                             "Failed to delete gear."
                                         );
@@ -227,6 +228,7 @@ export function ProviderGearCard({
 
                                     onGearDeleted(gear.id);
                                     setDeleting(false);
+                                    toast.success("Gear deleted successfully.");
                                 }}
                             >
                                 {deleting ? "Deleting..." : "Yes, Delete"}

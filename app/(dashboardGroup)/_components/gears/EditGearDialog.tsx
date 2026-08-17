@@ -19,6 +19,7 @@ import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
 
 import { updateGear } from "../../_actions/providerGearActions";
+import { toast } from "sonner";
 
 type Category = {
     id: string;
@@ -112,8 +113,15 @@ export function EditGearDialog({
         setLoading(false);
 
         if (!result.success) {
+            toast.error(
+                result.message || "Failed to update gear."
+            );
             return;
         }
+
+        toast.success("Gear updated successfully.");
+
+        onGearUpdated(result.data.gear);
 
         onGearUpdated(result.data.gear);
 

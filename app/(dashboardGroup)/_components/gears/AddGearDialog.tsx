@@ -19,6 +19,7 @@ import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
 
 import { createGear } from "../../_actions/providerGearActions";
+import { toast } from "sonner";
 
 type Category = {
     id: string;
@@ -105,8 +106,13 @@ export function AddGearDialog({
         setLoading(false);
 
         if (!result.success) {
+            toast.error(
+                result.message || "Failed to add gear."
+            );
             return;
         }
+
+        toast.success("Gear added successfully.");
 
         onGearCreated(result.data.gear);
 

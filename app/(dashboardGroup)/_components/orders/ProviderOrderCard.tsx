@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { useTransition } from "react";
+import { useTransition, useState } from "react";
 import { toast } from "sonner";
 
 import { Button } from "@/components/ui/button";
@@ -13,33 +13,39 @@ import {
     CardTitle,
 } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
-import { updateProviderOrderStatus } from "../../_actions/providerGearActions";
+
 import { ProviderOrderCardProps } from "@/lib/types";
+import { updateOrderStatus } from "../../_actions/providerGearActions";
 
 
 
 
 
 const statusVariant = {
-    PLACED: "secondary",
-    CONFIRMED: "default",
-    PAID: "default",
-    PICKED_UP: "default",
-    RETURNED: "outline",
-    CANCELLED: "destructive",
+    PLACED: "bg-yellow-100 text-yellow-800 border-yellow-300",
+    CONFIRMED: "bg-blue-100 text-blue-800 border-blue-300",
+    PAID: "bg-purple-100 text-purple-800 border-purple-300",
+    PICKED_UP: "bg-green-100 text-green-800 border-green-300",
+    RETURNED: "bg-gray-100 text-gray-800 border-gray-300",
+    CANCELLED: "bg-red-100 text-red-800 border-red-300",
 } as const;
 
 export function ProviderOrderCard({
     order,
 }: ProviderOrderCardProps) {
     const [pending, startTransition] = useTransition();
+    const [updatingStatus, setUpdatingStatus] = useState<string | null>(null);
 
     const handleStatusUpdate = (status: string) => {
+        setUpdatingStatus(status);
+
         startTransition(async () => {
-            const result = await updateProviderOrderStatus(
+            const result = await updateOrderStatus(
                 order.id,
                 status
             );
+
+            setUpdatingStatus(null);
 
             if (result.success) {
                 toast.success(
@@ -68,9 +74,8 @@ export function ProviderOrderCard({
                     </div>
 
                     <Badge
-                        variant={
-                            statusVariant[order.status]
-                        }
+                        variant="outline"
+                        className={statusVariant[order.status]}
                     >
                         {order.status.replace("_", " ")}
                     </Badge>
@@ -208,18 +213,29 @@ export function ProviderOrderCard({
                 {/* Actions */}
                 <div className="flex justify-end gap-2">
                     {order.status === "PLACED" && (
-                        <Button
-                            disabled={pending}
-                            onClick={() =>
-                                handleStatusUpdate(
-                                    "CONFIRMED"
-                                )
-                            }
-                        >
-                            {pending
-                                ? "Updating..."
-                                : "Confirm Rental"}
-                        </Button>
+                        <>
+                            <Button
+                                disabled={pending}
+                                onClick={() =>
+                                    handleStatusUpdate("CANCELLED")
+                                }
+                            >
+                                {updatingStatus === "CANCELLED"
+                                    ? "Cancelling..."
+                                    : "Cancel Rental"}
+                            </Button>
+
+                            <Button
+                                disabled={pending}
+                                onClick={() =>
+                                    handleStatusUpdate("CONFIRMED")
+                                }
+                            >
+                                {updatingStatus === "CONFIRMED"
+                                    ? "Confirming..."
+                                    : "Confirm Rental"}
+                            </Button>
+                        </>
                     )}
 
                     {order.status === "CONFIRMED" && (
